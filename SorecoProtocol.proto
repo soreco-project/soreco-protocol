@@ -1,0 +1,9 @@
+// A protocol definition for soreco.
+// It allows to communicate with an external device like android or IOS
+
+syntax = "proto2";
+
+message SimpleMessage {
+    required int32 lucky_number = 1;
+}
+
