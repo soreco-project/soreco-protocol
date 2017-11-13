@@ -2,8 +2,15 @@
 // It allows to communicate with an external device like android or IOS
 
 syntax = "proto2";
+import "nanopb.proto";   
 
-message SimpleMessage {
-    required int32 lucky_number = 1;
+message WifiConfigMessage {
+    optional string ssid = 1  [(nanopb).max_size = 32];
+    optional string password = 2  [(nanopb).max_size = 64];
 }
 
+message Builder {
+    oneof payload {
+        WifiConfigMessage WifiConfig = 1;
+    }
+}
