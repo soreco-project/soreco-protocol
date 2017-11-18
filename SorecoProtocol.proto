@@ -6,9 +6,12 @@ import "nanopb.proto";
 
 option java_package = "ch.soreco.android";
 
-message WifiConfigMessage {
-    optional string ssid = 1  [(nanopb).max_size = 32];
-    optional string password = 2  [(nanopb).max_size = 64];
+message Protocol {
+    oneof payload {
+        ResponseType Response = 1;
+        WifiConfigMessage WifiConfig = 5;
+        ScanWifiMessage ScanWifiMessage = 6;
+    }
 }
 
 enum ResponseType {
@@ -16,9 +19,26 @@ enum ResponseType {
     ERROR = 404;
 }
 
-message Protocol {
-    oneof payload {
-        ResponseType Response = 1;
-        WifiConfigMessage WifiConfig = 5;
+message WifiConfigMessage {
+    optional string ssid = 1  [(nanopb).max_size = 32];
+    optional string password = 2  [(nanopb).max_size = 64];
+}
+
+message ScanWifiMessage {
+    enum EncTypes {
+        ENC_TYPE_WEP  = 1;
+        ENC_TYPE_TKIP = 2;
+        ENC_TYPE_CCMP = 3;
+        // ... except these two, 7 and 8 are reserved in 802.11-2007
+        ENC_TYPE_NONE = 7;
+        ENC_TYPE_AUTO = 8;
+    };
+
+    message Wlan {
+        required string ssid = 2 [(nanopb).max_size = 32];
+        optional EncTypes EncType = 3;
+        optional int32 SignalStrength = 4;
     }
+
+    repeated Wlan Wlans = 1;
 }
